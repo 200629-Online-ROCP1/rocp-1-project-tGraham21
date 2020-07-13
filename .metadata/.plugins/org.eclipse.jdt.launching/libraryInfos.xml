@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<libraryInfos>
+<libraryInfo home="C:\Users\trevo\scoop\apps\ojdkbuild8-full\current" version="1.8.0_252">
+<bootpath>
+<entry path="C:\Users\trevo\scoop\apps\ojdkbuild8-full\current\jre\lib\resources.jar"/>
+<entry path="C:\Users\trevo\scoop\apps\ojdkbuild8-full\current\jre\lib\rt.jar"/>
+<entry path="C:\Users\trevo\scoop\apps\ojdkbuild8-full\current\jre\lib\sunrsasign.jar"/>
+<entry path="C:\Users\trevo\scoop\apps\ojdkbuild8-full\current\jre\lib\jsse.jar"/>
+<entry path="C:\Users\trevo\scoop\apps\ojdkbuild8-full\current\jre\lib\jce.jar"/>
+<entry path="C:\Users\trevo\scoop\apps\ojdkbuild8-full\current\jre\lib\charsets.jar"/>
+<entry path="C:\Users\trevo\scoop\apps\ojdkbuild8-full\current\jre\lib\jfr.jar"/>
+<entry path="C:\Users\trevo\scoop\apps\ojdkbuild8-full\current\jre\classes"/>
+</bootpath>
+<extensionDirs>
+<entry path="C:\Users\trevo\scoop\apps\ojdkbuild8-full\current\jre\lib\ext"/>
+<entry path="C:\WINDOWS\Sun\Java\lib\ext"/>
+</extensionDirs>
+<endorsedDirs>
+<entry path="C:\Users\trevo\scoop\apps\ojdkbuild8-full\current\jre\lib\endorsed"/>
+</endorsedDirs>
+</libraryInfo>
+</libraryInfos>
