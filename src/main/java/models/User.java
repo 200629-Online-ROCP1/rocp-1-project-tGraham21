@@ -22,37 +22,5 @@ public class User {
 		this.role = role;
 	}
 	
-	private boolean login(String user, String pass) {
-		return (username.equals(user) && password.equals(pass));
-	}
-	
-	public void viewInfo() {
-		System.out.println("Current Account Information: ");
-		System.out.println("Username: " + username);
-		System.out.println("Password: " + password);
-		System.out.println("Account Name: " + firstName + " " + lastName);
-		System.out.println("Email: " + email);
-	}
-	public boolean update(String field, String data) {
-		if(field.equals("username")) {
-			this.username = data;
-		}
-		else if(field.equals("password")){
-			this.password = data;
-		}
-		else if(field.equals("firstName")) {
-			this.firstName = data;
-		}
-		else if(field.equals("lastName")) {
-			this.lastName = data;
-		}
-		else if(field.equals("email")) {
-			this.email = data;
-		}
-		else {
-			return false;
-		}
-		return true;
-	
-	}
+
 }
