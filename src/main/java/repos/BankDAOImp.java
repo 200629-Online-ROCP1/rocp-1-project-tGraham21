@@ -28,8 +28,20 @@ public class BankDAOImp implements BankDAO{
 			String sql = "INSERT INTO users(user_id, username, pass, first_name, last_name, email)"
 					+ "VALUES(?,?,?,?,?,?)";
 			PreparedStatement statement = conn.prepareStatement(sql);
-			statement.setString(++index, user.id);
+			statement.setInt(++index, user.getId());
+			statement.setString(++index, user.getUsername());
+			statement.setString(++index, user.getPass());
+			statement.setString(++index, user.getFirstName());
+			statement.setString(++index, user.getLastName());
+			statement.setString(++index, user.getEmail());
+			
+			if(statement.execute()) {
+				return true;
+			}
+		} catch(SQLException e ) {
+			System.out.println(e);
 		}
+		return false;
 	}
 
 	@Override
@@ -39,7 +51,7 @@ public class BankDAOImp implements BankDAO{
 	}
 
 	@Override
-	public User findByFirstName(String string) {
+	public User findByUsername(String string) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -7,6 +7,6 @@ import models.*;
 public interface BankDAO {
 	public boolean insert(User user);
 	public boolean insertStatement(User user);
-	public User findByFirstName(String string);
+	public User findByUsername(String string);
 	public Set<User> selectAll();
 }

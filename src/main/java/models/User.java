@@ -1,5 +1,7 @@
 package models;
 
+import java.awt.List;
+
 import  models.*;
 
 public class User {
@@ -10,7 +12,7 @@ public class User {
 	private String lastName;
 	private String email;
 	private Role role;
-	private List<Account> accounts;
+	private List accounts;
 	
 	public User(int userId, String username, String password, String firstName, String lastName, String email, Role role) {
 		this.userId = userId;
@@ -22,5 +24,28 @@ public class User {
 		this.role = role;
 	}
 	
-
+	public int getId() {
+		return this.userId;
+	}
+	
+	public String getUsername () {
+		return this.username;
+	}
+	
+	public String getPass() {
+		return this.password;
+	}
+	
+	public String getFirstName() {
+		return this.firstName;
+	}
+	
+	public String getLastName() {
+		return this.lastName;
+	}
+	
+	public String getEmail() {
+		return this.email;
+	}
+	
 }
