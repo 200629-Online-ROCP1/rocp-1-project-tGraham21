@@ -47,7 +47,7 @@ public class UserDAO implements UserDAOInterface{
 	@Override
 	public User findById(int id) {
 		try(Connection conn = ConnectionUtil.getConnection()){
-			String sql = "SELECT * FROM users WHERE user_id = " + id+ ";";
+			String sql = "SELECT * FROM users WHERE user_id = " + id + ";";
 			
 			Statement statement = conn.createStatement();
 			
