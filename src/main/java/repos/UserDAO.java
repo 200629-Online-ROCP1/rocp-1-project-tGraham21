@@ -95,4 +95,29 @@ public class UserDAO implements UserDAOInterface{
 		return null;
 	}
 	
+	@Override
+	public Boolean addUser(User user) {
+		try(Connection conn = ConnectionUtil.getConnection()){
+			
+			int index = 0; 
+			 
+			String sql = "INSERT INTO users(username, pass, first_name, last_name, email)"
+					+" VALUES(?,?,?,?,?)";
+			
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(++index, user.getUsername());
+			statement.setString(++index, user.getPassword());
+			statement.setString(++index, user.getFirstName());
+			statement.setString(++index, user.getLastName());
+			statement.setString(++index, user.getEmail());
+			
+			statement.execute();
+			return true;
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return false; 
+	}
+	
 }
