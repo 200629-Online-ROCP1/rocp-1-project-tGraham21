@@ -96,7 +96,7 @@ public class UserDAO implements UserDAOInterface{
 	}
 	
 	@Override
-	public Boolean addUser(User user) {
+	public User addUser(User user) {
 		try(Connection conn = ConnectionUtil.getConnection()){
 			
 			int index = 0; 
@@ -111,13 +111,30 @@ public class UserDAO implements UserDAOInterface{
 			statement.setString(++index, user.getLastName());
 			statement.setString(++index, user.getEmail());
 			
+			
 			statement.execute();
-			return true;
+			
+			
+			String query = "SELECT * FROM users WHERE username = '" + user.getUsername() + "';";
+			Statement statementOutput = conn.createStatement();
+			ResultSet result = statementOutput.executeQuery(query);
+			if(result.next()) {
+				User userOutput = new User();
+				userOutput.setId(result.getInt("user_id"));
+				userOutput.setUsername(result.getString("username"));
+				userOutput.setPassword(result.getString("pass"));
+				userOutput.setFirstName(result.getString("first_name"));
+				userOutput.setLastName(result.getString("last_name"));
+				userOutput.setEmail(result.getString("email"));
+				return userOutput;
+			}
+			
+			
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
 		}
-		return false; 
+		return null; 
 	}
 	
 }

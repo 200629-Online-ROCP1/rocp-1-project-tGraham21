@@ -1,13 +1,20 @@
 package controllers;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.List;
 
 import models.*;
 import services.UserService;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class UserController {
 	
-	private final UserService us = new UserService();
+	private static final UserService us = new UserService();
+	private static final ObjectMapper om = new ObjectMapper();
 	
 	public List<User> findAll(){
 		return us.findAll();
@@ -17,7 +24,23 @@ public class UserController {
 		return us.findById(id);
 	}
 	
-	public boolean addUser(User user) {
+	public User addUser(HttpServletRequest req, HttpServletResponse res) throws IOException {
+		
+		BufferedReader reader = req.getReader();
+		
+		StringBuilder s = new StringBuilder();
+		
+		String line = reader.readLine();
+		
+		while(line != null) {
+			s.append(line);
+			line = reader.readLine();
+		}
+		
+		String body = new String(s);
+		
+		User user = om.readValue(body, User.class);
+		
 		return us.addUser(user);
 	}
 	
