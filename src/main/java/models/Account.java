@@ -7,11 +7,27 @@ public class Account {
 	private AccountStatus status;
 	private AccountType type;
 	
+	
+	public Account () {}
+	
 	public Account ( int accountId, double balance, AccountStatus status, AccountType type) {
 		this.accountId = accountId;
 		this.balance = balance;
 		this.status = status;
 		this.type = type;
+	}
+	public int getId() {
+		return this.accountId;
+	}
+	public void setId(int id ) {
+		this.accountId = id;
+	}
+	
+	public double getBalance() {
+		return this.balance;
+	}
+	public void setBalance(double balance) {
+		this.balance = balance;
 	}
 	
 	public double withdraw (double amount) {

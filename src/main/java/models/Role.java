@@ -9,12 +9,22 @@ public class Role {
 		this.role = role;
 	}
 	
+	public Role () { }
+	
 	public int getRoleId() {
 		return roleId;
 	}
 	
+	public void setRoleId(int id) {
+		this.roleId = id;
+	}
+	
 	public String getRole() {
 		return role;
+	}
+	
+	public void setRole(String role) {
+		this.role = role;
 	}
 	
 }

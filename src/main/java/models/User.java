@@ -1,6 +1,6 @@
 package models;
 
-import java.awt.List;
+import java.util.ArrayList;
 
 import models.*;
 
@@ -12,9 +12,10 @@ public class User {
 	private String lastName;
 	private String email;
 	private Role role;
-	private List accounts;
+	private ArrayList<Account> accounts;
 
 	public User() {
+		this.accounts = new ArrayList<Account>();
 	};
 
 	public User(int userId, String username, String password, String firstName, String lastName, String email,
@@ -26,6 +27,7 @@ public class User {
 		this.lastName = lastName;
 		this.email = email;
 		this.role = role;
+		this.accounts = new ArrayList<Account>();
 	}
 
 	public int getId() {
@@ -83,12 +85,16 @@ public class User {
 	public void setRole(Role nRole) {
 		this.role = nRole;
 	}
+	
+	public void addAccount(Account acct) {
+		this.accounts.add(acct);
+	}
 
 	@Override
 	public String toString() {
 		return "User [userId=" + userId + ", username=" + username + ", password=" + password + ", firstName="
-				+ firstName + ", lastName=" + lastName + ", email=" + email + ", role=" + role + ", accounts="
-				+ accounts + "]";
+				+ firstName + ", lastName=" + lastName + ", email=" + email + "]";
 	}
-	
+
+
 }

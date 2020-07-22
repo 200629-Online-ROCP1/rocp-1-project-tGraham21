@@ -41,6 +41,7 @@ public class LoginController {
 				HttpSession ses = req.getSession();
 				ses.setAttribute("userId", id);
 				ses.setAttribute("loggedIn", true);
+				ses.setAttribute("role", us.findById(id).getRole().getRole());
 				res.setStatus(200);
 				User user = us.findById(id);
 				res.getWriter().println(om.writeValueAsString(user));

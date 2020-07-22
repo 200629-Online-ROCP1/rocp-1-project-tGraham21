@@ -19,22 +19,49 @@ public class UserDAO implements UserDAOInterface{
 			String sql = "SELECT * FROM users";
 			
 			Statement statement = conn.createStatement();
+			Statement statementRole = conn.createStatement();
+			Statement statementAcct = conn.createStatement();
 			
 			List<User> userList = new ArrayList<>();
 			
 			ResultSet result = statement.executeQuery(sql);
-			
+
 			while(result.next()) {
 				User user = new User();
-				user.setId(result.getInt("user_id"));
+				Role role = new Role();
+				
+				int id = result.getInt("user_id");
+				user.setId(id);
 				user.setUsername(result.getString("username"));
 				user.setPassword(result.getString("pass"));
 				user.setFirstName(result.getString("first_name"));
 				user.setLastName(result.getString("last_name"));
 				user.setEmail(result.getString("email"));
 				
+				String sqlRole = "SELECT * FROM user_role WHERE user_id_fk = " + id + ";";
+				System.out.println(sqlRole);
+				ResultSet resultRole = statementRole.executeQuery(sqlRole);
+				
+				if(resultRole.next()) {
+					
+					role.setRole(resultRole.getString("user_role"));
+					role.setRoleId(resultRole.getInt("role_id"));				
+					user.setRole(role);
+				}
+				
+				String sqlAccounts = "SELECT * FROM account WHERE user_id_fk = " + id + ";";
+				ResultSet resultAcct = statementAcct.executeQuery(sqlAccounts);
+				while(resultAcct.next()) {
+					Account acct = new Account();
+					acct.setId(resultAcct.getInt("account_id"));
+					acct.setBalance(resultAcct.getDouble("balance"));
+					user.addAccount(acct);
+				}
+
 				userList.add(user);
 			}
+			
+				
 			
 			return userList; 
 		}
@@ -47,11 +74,13 @@ public class UserDAO implements UserDAOInterface{
 	@Override
 	public User findById(int id) {
 		try(Connection conn = ConnectionUtil.getConnection()){
+			Role role = new Role();
+			
 			String sql = "SELECT * FROM users WHERE user_id = " + id + ";";
 			
 			Statement statement = conn.createStatement();
-			
-			List<User> userList = new ArrayList<>();
+			Statement statementRole = conn.createStatement();
+			Statement statementAcct = conn.createStatement();
 			
 			ResultSet result = statement.executeQuery(sql);
 			
@@ -63,6 +92,26 @@ public class UserDAO implements UserDAOInterface{
 				user.setFirstName(result.getString("first_name"));
 				user.setLastName(result.getString("last_name"));
 				user.setEmail(result.getString("email"));
+				String sqlRole = "SELECT * FROM user_role WHERE user_id_fk = " + id + ";";
+				System.out.println(sqlRole);
+				ResultSet resultRole = statementRole.executeQuery(sqlRole);
+				
+				if(resultRole.next()) {
+					
+					role.setRole(resultRole.getString("user_role"));
+					role.setRoleId(resultRole.getInt("role_id"));				
+					user.setRole(role);
+				}
+				
+				String sqlAccounts = "SELECT * FROM account WHERE user_id_fk = " + id + ";";
+				ResultSet resultAcct = statementAcct.executeQuery(sqlAccounts);
+				while(resultAcct.next()) {
+					Account acct = new Account();
+					acct.setId(resultAcct.getInt("account_id"));
+					acct.setBalance(resultAcct.getDouble("balance"));
+					user.addAccount(acct);
+				}
+				
 				return user;
 			}
 		}
