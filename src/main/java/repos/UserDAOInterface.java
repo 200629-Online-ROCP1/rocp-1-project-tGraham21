@@ -6,6 +6,6 @@ import models.*;
 public interface UserDAOInterface {
 	public List<User> findAll();
 	public User findById(int id);
-	public User updateUserbyId(User user);
+	public User updateUserById(int id, User user);
 	public User addUser(User user);
 }

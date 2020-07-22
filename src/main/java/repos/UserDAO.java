@@ -39,7 +39,6 @@ public class UserDAO implements UserDAOInterface{
 				user.setEmail(result.getString("email"));
 				
 				String sqlRole = "SELECT * FROM user_role WHERE user_id_fk = " + id + ";";
-				System.out.println(sqlRole);
 				ResultSet resultRole = statementRole.executeQuery(sqlRole);
 				
 				if(resultRole.next()) {
@@ -122,18 +121,26 @@ public class UserDAO implements UserDAOInterface{
 	}
 
 	@Override
-	public User updateUserbyId(User user) {
+	public User updateUserById(int id, User user) {
 		try(Connection conn = ConnectionUtil.getConnection()){
-			String sql = "UPDATE SET "
-					+ "username = " + user.getUsername() + ", " + 
-					"pass = " + user.getPassword() + ", " + 
-					"first_name = " + user.getFirstName() + ", " + 
-					"last_name = " + user.getLastName() + ", " + 
-					"email = "+ user.getEmail() + 
-					" WHERE user_id = " + user.getId() + ";";
+			String sql = "UPDATE users SET "
+					+ "username = '" + user.getUsername() + "', " + 
+					"pass = '" + user.getPassword() + "', " + 
+					"first_name = '" + user.getFirstName() + "', " + 
+					"last_name = '" + user.getLastName() + "', " + 
+					"email = '"+ user.getEmail() + 
+					"' WHERE user_id = " + id + ";";
 			
 			Statement statement = conn.createStatement();
 			statement.execute(sql);
+			System.out.println(sql);
+			
+			String sqlRole = "UPDATE user_role SET user_role =  '" +
+					user.getRole().getRole()+ "' " +
+					" WHERE user_id_fk = " + id + "; ";
+			Statement statementRole = conn.createStatement();
+			statementRole.execute(sqlRole);
+			System.out.println(sqlRole);
 			
 			return user;
 		}
@@ -151,7 +158,7 @@ public class UserDAO implements UserDAOInterface{
 			int index = 0; 
 			 
 			String sql = "INSERT INTO users(username, pass, first_name, last_name, email)"
-					+" VALUES(?,?,?,?,?)";
+					+" VALUES(?,?,?,?,?);";
 			
 			PreparedStatement statement = conn.prepareStatement(sql);
 			statement.setString(++index, user.getUsername());
@@ -163,9 +170,11 @@ public class UserDAO implements UserDAOInterface{
 			
 			statement.execute();
 			
+			
 			// return user with correct id
 			String query = "SELECT * FROM users WHERE username = '" + user.getUsername() + "';";
 			Statement statementOutput = conn.createStatement();
+			
 			ResultSet result = statementOutput.executeQuery(query);
 			if(result.next()) {
 				User userOutput = new User();
@@ -175,6 +184,29 @@ public class UserDAO implements UserDAOInterface{
 				userOutput.setFirstName(result.getString("first_name"));
 				userOutput.setLastName(result.getString("last_name"));
 				userOutput.setEmail(result.getString("email"));
+				
+				String sqlRole = "INSERT INTO user_role (user_role, user_id_fk)" +
+						" VALUES(?,?);";
+				PreparedStatement sendRole = conn.prepareStatement(sqlRole);
+				
+				sendRole.setString(1, user.getRole().getRole());
+				sendRole.setInt(2, userOutput.getId());
+				
+				sendRole.execute();
+				
+				String queryRole = "SELECT * FROM user_role WHERE user_id_fk = " + userOutput.getId() + ";";
+				System.out.println(queryRole);
+				Statement statementRole = conn.createStatement();
+				ResultSet resultRole = statementRole.executeQuery(queryRole);
+				
+				if(resultRole.next()) {
+					Role role = new Role();
+					role.setRole(resultRole.getString("user_role"));
+					role.setRoleId(resultRole.getInt("role_id"));
+					System.out.println(role.getRole());
+					userOutput.setRole(role);
+				}
+				
 				return userOutput;
 			}
 			

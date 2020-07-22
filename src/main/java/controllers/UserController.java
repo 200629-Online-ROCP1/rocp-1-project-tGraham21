@@ -44,8 +44,8 @@ public class UserController {
 		return us.addUser(user);
 	}
 	
-//	public User updateUser(User user) {
-//		return us.updateUser();
-//	}
+	public User updateUserById(int id, User user) {
+		return us.updateUserById(id, user);
+	}
 	
 }

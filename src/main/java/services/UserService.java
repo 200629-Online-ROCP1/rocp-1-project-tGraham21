@@ -19,23 +19,14 @@ public class UserService {
 	}
 	
 	public User addUser(User user) {
-		List<User> userList = findAll();
-		// could use compareTo()??
-//		
-//		for(User u: userList) {
-//			if( (user.getUsername().equals(u.getUsername())) || (user.getLastName().equals(u.getLastName()))) {
-//				return null; 
-//			}
-//			// check if already in list
-//		}
 		
 		User newUser = dao.addUser(user);
 		return newUser;
 		
 	}
 	
-//	public boolean updateUser(User user) {
-//		return dao.updateUserbyId(user)
-//	}
-//	
+	public User updateUserById(int id, User user) {
+		return dao.updateUserById(id, user);
+	}
+	
 }
