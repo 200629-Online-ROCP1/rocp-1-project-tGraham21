@@ -92,7 +92,7 @@ public class UserDAO implements UserDAOInterface{
 				user.setLastName(result.getString("last_name"));
 				user.setEmail(result.getString("email"));
 				String sqlRole = "SELECT * FROM user_role WHERE user_id_fk = " + id + ";";
-				System.out.println(sqlRole);
+				
 				ResultSet resultRole = statementRole.executeQuery(sqlRole);
 				
 				if(resultRole.next()) {

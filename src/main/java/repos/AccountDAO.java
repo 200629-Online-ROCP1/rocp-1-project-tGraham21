@@ -35,7 +35,26 @@ public class AccountDAO implements AccountDAOInterface{
 
 	@Override
 	public Account findAccountById(int id) {
-		// TODO Auto-generated method stub
+		try(Connection conn = ConnectionUtil.getConnection()){
+			String sql = "SELECT * FROM account WHERE account_id = " + id + ";";
+			
+			Statement statement = conn.createStatement();
+			
+			ResultSet result = statement.executeQuery(sql);
+			
+			if(result.next()) {
+				Account acct = new Account();
+				acct.setId(result.getInt("account_id"));
+				acct.setBalance(result.getDouble("balance"));
+				acct.setStatus(result.getString("account_status"));
+				acct.setType(result.getString("account_type"));
+				
+				return acct;
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
@@ -54,6 +73,8 @@ public class AccountDAO implements AccountDAOInterface{
 				Account acct = new Account();
 				acct.setId(result.getInt("account_id"));
 				acct.setBalance(result.getDouble("balance"));
+				acct.setStatus(result.getString("account_status"));
+				acct.setType(result.getString("account_type"));
 				accountList.add(acct);
 			}
 			

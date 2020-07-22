@@ -22,6 +22,7 @@ public class MasterServlet extends HttpServlet {
 
 	private static final UserController uc = new UserController();
 	private static final LoginController lc = new LoginController();
+	private static final AccountController ac = new AccountController();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
@@ -130,8 +131,46 @@ public class MasterServlet extends HttpServlet {
 				HttpSession ses1 = req.getSession(false);
 				if (ses1 != null && ((Boolean) ses1.getAttribute("loggedIn"))) {
 					if (portions.length == 3) {
-						
+						int id = Integer.parseInt(portions[2]);
+						if(ses1.getAttribute("role").equals("Admin") || ses1.getAttribute("role").equals("Employee") ||
+								ses1.getAttribute("userId").equals(id)) {
+							Account account = ac.findById(id);
+							
+							if(account != null) {
+								res.setStatus(200);
+								res.getWriter().println(om.writeValueAsString(account));
+							}
+							else {
+								res.setStatus(200);
+								res.getWriter().println("Account doesn't exist");
+							}
+						}
+						else {
+							res.setStatus(401);
+							res.getWriter().println("Incorrect credentials");
+						}
 					}
+					else {
+						if(ses1.getAttribute("role").equals("Admin") || ses1.getAttribute("role").equals("Employee")) {
+							List<Account> accounts = ac.findAll();
+							res.setStatus(200);
+							if(accounts.size() > 0) {
+								res.getWriter().println(om.writeValueAsString(accounts));
+							}
+							else
+							{
+								res.getWriter().println("No Accounts Available");
+							}
+						}
+						else {
+							res.setStatus(401);
+							res.getWriter().println("Incorrect credentials");
+						}
+					}
+				}
+				else {
+					res.setStatus(401);
+					res.getWriter().println("Not logged in");
 				}
 
 			}
@@ -146,6 +185,7 @@ public class MasterServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 		doGet(req, res);
 	}
+
 	protected void doPut(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 		doGet(req, res);
 	}

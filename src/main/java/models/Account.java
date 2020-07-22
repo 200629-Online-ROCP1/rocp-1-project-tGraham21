@@ -4,13 +4,12 @@ package models;
 public class Account {
 	private int accountId;
 	private double balance;
-	private AccountStatus status;
-	private AccountType type;
-	
+	private String status;
+	private String type;
 	
 	public Account () {}
 	
-	public Account ( int accountId, double balance, AccountStatus status, AccountType type) {
+	public Account ( int accountId, double balance, String status, String type) {
 		this.accountId = accountId;
 		this.balance = balance;
 		this.status = status;
@@ -28,6 +27,22 @@ public class Account {
 	}
 	public void setBalance(double balance) {
 		this.balance = balance;
+	}
+	
+	public String getStatus() {
+		return this.status;
+	}
+	
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
+	public String getType() {
+		return this.type;
+	}
+	
+	public void setType(String type) {
+		this.type = type;
 	}
 	
 	public double withdraw (double amount) {
