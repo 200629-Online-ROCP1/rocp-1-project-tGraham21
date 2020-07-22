@@ -114,7 +114,7 @@ public class UserDAO implements UserDAOInterface{
 			
 			statement.execute();
 			
-			
+			// return user with correct id
 			String query = "SELECT * FROM users WHERE username = '" + user.getUsername() + "';";
 			Statement statementOutput = conn.createStatement();
 			ResultSet result = statementOutput.executeQuery(query);

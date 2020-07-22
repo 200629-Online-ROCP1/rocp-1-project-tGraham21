@@ -14,13 +14,16 @@ public class Account {
 		this.type = type;
 	}
 	
-	private double deposit(double deposit) {
-		balance += deposit;
-		return balance;
+	public double withdraw (double amount) {
+		return balance - amount; 
 	}
 	
-	private double withdrawl(double withdrawl) {
-		balance -= withdrawl;
-		return balance; 
+	public double deposit (double amount) {
+		return balance + amount;
+	}
+	
+	public void transfer (double amount, Account acct) {
+		acct.deposit(amount);
+		this.withdraw(amount);
 	}
 }
