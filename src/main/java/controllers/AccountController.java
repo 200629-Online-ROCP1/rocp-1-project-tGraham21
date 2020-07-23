@@ -71,9 +71,7 @@ public class AccountController {
 	public List<Account> findByUserId(int id) {
 
 		User user = uc.findById(id);
-		for (Account a : user.getAccounts()) {
-			System.out.println(a.getBalance());
-		}
+		
 		return user.getAccounts();
 	}
 

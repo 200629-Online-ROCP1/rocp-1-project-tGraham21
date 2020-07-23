@@ -40,12 +40,12 @@ public class MasterServlet extends HttpServlet {
 			case "users":
 				HttpSession ses = req.getSession(false);
 				if (ses != null && ((Boolean) ses.getAttribute("loggedIn"))) {
-				
+
 					if (portions.length == 3) {
 						
 						int id = Integer.parseInt(portions[2]);
 						if (req.getMethod().equals("PUT")) {
-							
+
 							if (ses.getAttribute("userId").equals(id) || ses.getAttribute("role").equals("Admin")) {
 
 								BufferedReader reader = req.getReader();
@@ -73,6 +73,19 @@ public class MasterServlet extends HttpServlet {
 								res.getWriter().println("Don't have permission to edit");
 							}
 						}
+//						} else if (req.getMethod().equals("POST")) {
+//							User newUser = uc.addUser(req, res);
+//							if (ses.getAttribute("role").equals("Admin")) {
+//								if (newUser != null) {
+//									res.setStatus(200);
+//									res.getWriter().println(om.writeValueAsString(newUser));
+//								} else {
+//									res.setStatus(400);
+//									res.getWriter().println("Error Adding User");
+//								}
+//
+//							}
+//						}
 
 						else {
 							if (ses.getAttribute("userId").equals(id) || ses.getAttribute("role").equals("Admin")
@@ -119,20 +132,19 @@ public class MasterServlet extends HttpServlet {
 				lc.logout(req, res);
 				break;
 			case "register":
-				
+
 				HttpSession session = req.getSession(false);
-				if(session.getAttribute("role").equals("Admin")) {
-					
+				if (session.getAttribute("role").equals("Admin")) {
+
 					User newUser = uc.addUser(req, res);
-				if (newUser != null) {
-					res.getWriter().println(om.writeValueAsString(newUser));
-					res.setStatus(201);
+					if (newUser != null) {
+						res.getWriter().println(om.writeValueAsString(newUser));
+						res.setStatus(201);
+					} else {
+						res.getWriter().println("Invalid Fields");
+						res.setStatus(400);
+					}
 				} else {
-					res.getWriter().println("Invalid Fields");
-					res.setStatus(400);
-				}
-				}
-				else {
 					res.getWriter().println("Invalid Credentials");
 					res.setStatus(401);
 				}
@@ -142,11 +154,10 @@ public class MasterServlet extends HttpServlet {
 				boolean ownsAccount;
 				if (ses1 != null && ((Boolean) ses1.getAttribute("loggedIn"))) {
 					if (portions.length == 3) {
-						boolean isNumber= true;
+						boolean isNumber = true;
 						try {
 							int i = Integer.parseInt(portions[2]);
-						}
-						catch(NumberFormatException e){
+						} catch (NumberFormatException e) {
 							isNumber = false;
 						}
 
@@ -157,12 +168,11 @@ public class MasterServlet extends HttpServlet {
 								if (out.equals("error")) {
 									res.getWriter().println("Insufficient Funds");
 									res.setStatus(400);
-									
-								} else if(out.equals("Permissions Error")){
+
+								} else if (out.equals("Permissions Error")) {
 									res.getWriter().println("Incorrect Credentials");
 									res.setStatus(400);
-								}
-								else {
+								} else {
 									res.getWriter().println(out);
 									res.setStatus(200);
 								}
@@ -171,12 +181,11 @@ public class MasterServlet extends HttpServlet {
 								if (out.equals("error")) {
 									res.getWriter().println("Deposit Error");
 									res.setStatus(400);
-									
-								} else if(out.equals("Permissions Error")){
+
+								} else if (out.equals("Permissions Error")) {
 									res.getWriter().println("Incorrect Credentials");
 									res.setStatus(400);
-								}
-								else {
+								} else {
 									res.getWriter().println(out);
 									res.setStatus(200);
 								}
@@ -186,19 +195,18 @@ public class MasterServlet extends HttpServlet {
 								if (out.equals("error")) {
 									res.getWriter().println("Transfer Error");
 									res.setStatus(400);
-									
-								} else if(out.equals("Permissions Error")){
+
+								} else if (out.equals("Permissions Error")) {
 									res.getWriter().println("Incorrect Credentials");
 									res.setStatus(400);
-								}
-								else {
+								} else {
 									res.getWriter().println(out);
 									res.setStatus(200);
 								}
 							}
 						} else {
 							int id = Integer.parseInt(portions[2]);
-							System.out.println(id);
+
 							User user = uc.findById((int) ses1.getAttribute("userId"));
 							ownsAccount = false;
 							for (Account a : user.getAccounts()) {
@@ -236,7 +244,8 @@ public class MasterServlet extends HttpServlet {
 							}
 
 							if (ses1.getAttribute("role").equals("Admin")
-									|| ses1.getAttribute("role").equals("Employee") || ownsAccount) {
+									|| ses1.getAttribute("role").equals("Employee")
+									|| ses1.getAttribute("userId").equals(id)) {
 								List<Account> matches = ac.findByUserId(id);
 								if (matches.size() > 0) {
 									res.setStatus(200);
