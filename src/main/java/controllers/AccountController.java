@@ -89,6 +89,8 @@ public class AccountController {
 	}
 
 	public String withdraw(HttpServletRequest req, HttpServletResponse res, HttpSession ses) throws IOException {
+		boolean ownsAccount = false;
+		
 		BufferedReader reader = req.getReader();
 
 		StringBuilder s = new StringBuilder();
@@ -103,7 +105,15 @@ public class AccountController {
 		String body = new String(s);
 
 		DepositDTO dto = om.readValue(body, DepositDTO.class);
-		if(ses.getAttribute("role").equals("Admin") || ses.getAttribute("userId").equals(dto.accountId)) {
+		
+		//Check to see if user owns account
+		User user = uc.findById((int)ses.getAttribute("userId"));
+		for (Account a : user.getAccounts()) {
+		if (a.getId() == dto.accountId) {
+			ownsAccount = true;
+			}
+		}
+		if(ses.getAttribute("role").equals("Admin") || ownsAccount) {
 		if (as.withdraw(dto.amount, dto.accountId) != -1) {
 
 			return "$" + dto.amount + " has been withdrawn from Account# " + dto.accountId;
@@ -116,6 +126,9 @@ public class AccountController {
 	}
 
 	public String deposit(HttpServletRequest req, HttpServletResponse res, HttpSession ses) throws IOException {
+		
+		boolean ownsAccount = false;
+
 		BufferedReader reader = req.getReader();
 
 		StringBuilder s = new StringBuilder();
@@ -130,7 +143,15 @@ public class AccountController {
 		String body = new String(s);
 
 		DepositDTO dto = om.readValue(body, DepositDTO.class);
-		if (ses.getAttribute("role").equals("Admin") || ses.getAttribute("userId").equals(dto.accountId)) {
+		
+		//Check to see if user owns account
+		User user = uc.findById((int)ses.getAttribute("userId"));
+		for (Account a : user.getAccounts()) {
+			if (a.getId() == dto.accountId) {
+				ownsAccount = true;
+				}
+			}
+		if (ses.getAttribute("role").equals("Admin") || ownsAccount) {
 			if (as.deposit(dto.amount, dto.accountId) != -1) {
 				return "$" + dto.amount + " has been deposited to Account# " + dto.accountId;
 			} else {
@@ -142,6 +163,7 @@ public class AccountController {
 	}
 
 	public String transfer(HttpServletRequest req, HttpServletResponse res, HttpSession ses) throws IOException {
+		boolean ownsAccount = false;
 
 		BufferedReader reader = req.getReader();
 
@@ -157,7 +179,16 @@ public class AccountController {
 		String body = new String(s);
 
 		TransferDTO dto = om.readValue(body, TransferDTO.class);
-		if (ses.getAttribute("role").equals("Admin") || ses.getAttribute("userId").equals(dto.sourceAccountId)) {
+		
+		//Check to see if user owns account
+		User user = uc.findById((int)ses.getAttribute("userId"));
+		for (Account a : user.getAccounts()) {
+			if (a.getId() == dto.sourceAccountId) {
+				ownsAccount = true;
+				}
+			}
+		
+		if (ses.getAttribute("role").equals("Admin") || ownsAccount) {
 			if (as.transfer(dto.amount, dto.sourceAccountId, dto.targetAccountId)) {
 				return "$" + dto.amount + " has been transferred from Account# " + dto.sourceAccountId + " to Account#"
 						+ dto.targetAccountId;

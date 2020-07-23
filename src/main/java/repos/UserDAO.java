@@ -94,7 +94,7 @@ public class UserDAO implements UserDAOInterface{
 				user.setLastName(result.getString("last_name"));
 				user.setEmail(result.getString("email"));
 				String sqlRole = "SELECT * FROM user_role WHERE user_id_fk = " + id + ";";
-				System.out.println(sqlRole);
+
 				ResultSet resultRole = statementRole.executeQuery(sqlRole);
 				
 				if(resultRole.next()) {
@@ -137,7 +137,6 @@ public class UserDAO implements UserDAOInterface{
 			
 			Statement statement = conn.createStatement();
 			statement.execute(sql);
-			System.out.println(sql);
 			
 			String sqlRole = "UPDATE user_role SET user_role =  '" +
 					user.getRole().getRole()+ "' " +
@@ -199,7 +198,7 @@ public class UserDAO implements UserDAOInterface{
 				sendRole.execute();
 				
 				String queryRole = "SELECT * FROM user_role WHERE user_id_fk = " + userOutput.getId() + ";";
-				System.out.println(queryRole);
+
 				Statement statementRole = conn.createStatement();
 				ResultSet resultRole = statementRole.executeQuery(queryRole);
 				
@@ -207,7 +206,7 @@ public class UserDAO implements UserDAOInterface{
 					Role role = new Role();
 					role.setRole(resultRole.getString("user_role"));
 					role.setRoleId(resultRole.getInt("role_id"));
-					System.out.println(role.getRole());
+
 					userOutput.setRole(role);
 				}
 				

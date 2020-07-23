@@ -40,11 +40,12 @@ public class MasterServlet extends HttpServlet {
 			case "users":
 				HttpSession ses = req.getSession(false);
 				if (ses != null && ((Boolean) ses.getAttribute("loggedIn"))) {
+				
 					if (portions.length == 3) {
-
+						
 						int id = Integer.parseInt(portions[2]);
 						if (req.getMethod().equals("PUT")) {
-
+							
 							if (ses.getAttribute("userId").equals(id) || ses.getAttribute("role").equals("Admin")) {
 
 								BufferedReader reader = req.getReader();
@@ -118,8 +119,11 @@ public class MasterServlet extends HttpServlet {
 				lc.logout(req, res);
 				break;
 			case "register":
-				User newUser = uc.addUser(req, res);
-
+				
+				HttpSession session = req.getSession(false);
+				if(session.getAttribute("role").equals("Admin")) {
+					
+					User newUser = uc.addUser(req, res);
 				if (newUser != null) {
 					res.getWriter().println(om.writeValueAsString(newUser));
 					res.setStatus(201);
@@ -127,13 +131,26 @@ public class MasterServlet extends HttpServlet {
 					res.getWriter().println("Invalid Fields");
 					res.setStatus(400);
 				}
+				}
+				else {
+					res.getWriter().println("Invalid Credentials");
+					res.setStatus(401);
+				}
 				break;
 			case "accounts":
 				HttpSession ses1 = req.getSession(false);
 				boolean ownsAccount;
 				if (ses1 != null && ((Boolean) ses1.getAttribute("loggedIn"))) {
 					if (portions.length == 3) {
-						if (portions[2] instanceof String) {
+						boolean isNumber= true;
+						try {
+							int i = Integer.parseInt(portions[2]);
+						}
+						catch(NumberFormatException e){
+							isNumber = false;
+						}
+
+						if (!isNumber) {
 							String item = portions[2];
 							if (item.equals("withdraw")) {
 								String out = ac.withdraw(req, res, ses1);
@@ -181,7 +198,7 @@ public class MasterServlet extends HttpServlet {
 							}
 						} else {
 							int id = Integer.parseInt(portions[2]);
-
+							System.out.println(id);
 							User user = uc.findById((int) ses1.getAttribute("userId"));
 							ownsAccount = false;
 							for (Account a : user.getAccounts()) {
