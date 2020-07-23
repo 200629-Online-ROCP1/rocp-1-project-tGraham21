@@ -12,7 +12,7 @@ public interface AccountDAOInterface {
 	public List<Account> findAll();
 	public Account findByStatus(AccountStatus status);
 	public Account findByUser(User user);
-	public Account submitAccount(Account acct);
+	public Account submitAccount(Account acct, int id);
 	public Account updateAccount(Account acct);
 	
 	

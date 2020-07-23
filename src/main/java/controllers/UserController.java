@@ -20,7 +20,7 @@ public class UserController {
 		return us.findAll();
 	}
 	
-	public User findByInt(int id) {
+	public User findById(int id) {
 		return us.findById(id);
 	}
 	

@@ -17,4 +17,8 @@ public class AccountService {
 	public Account findById(int id) {
 		return dao.findAccountById(id);
 	}
+	
+	public Account submitAccount(Account acct, int id) {
+		return dao.submitAccount(acct, id);
+	}
 }

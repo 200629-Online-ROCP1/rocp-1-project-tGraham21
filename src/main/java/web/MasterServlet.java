@@ -75,7 +75,7 @@ public class MasterServlet extends HttpServlet {
 						else {
 							if (ses.getAttribute("userId").equals(id) || ses.getAttribute("role").equals("Admin")
 									|| ses.getAttribute("role").equals("Employee")) {
-								User user = uc.findByInt(id);
+								User user = uc.findById(id);
 								res.setStatus(200);
 
 								if (user != null) {
@@ -129,11 +129,20 @@ public class MasterServlet extends HttpServlet {
 				break;
 			case "accounts":
 				HttpSession ses1 = req.getSession(false);
+				boolean ownsAccount;
 				if (ses1 != null && ((Boolean) ses1.getAttribute("loggedIn"))) {
 					if (portions.length == 3) {
 						int id = Integer.parseInt(portions[2]);
+						
+						User user = uc.findById((int)ses1.getAttribute("userId"));
+						ownsAccount = false;
+						for(Account a : user.getAccounts()) {
+							if(a.getId() == id) {
+								ownsAccount = true;
+							}
+						}
 						if(ses1.getAttribute("role").equals("Admin") || ses1.getAttribute("role").equals("Employee") ||
-								ses1.getAttribute("userId").equals(id)) {
+								ownsAccount) {
 							Account account = ac.findById(id);
 							
 							if(account != null) {
@@ -150,7 +159,28 @@ public class MasterServlet extends HttpServlet {
 							res.getWriter().println("Incorrect credentials");
 						}
 					}
+					else if(portions.length == 4) {
+						
+					}
 					else {
+
+						if(req.getMethod().equals("POST")) {
+							
+							// only submit account for yourself
+							Account acct = ac.submitAccount(req, res,(int) ses1.getAttribute("userId"));
+							if (acct != null) {
+								res.getWriter().println(om.writeValueAsString(acct));
+								res.setStatus(201);
+							} else {
+								res.getWriter().println("Invalid Fields");
+								res.setStatus(400);
+							}
+							
+						}
+						else if(req.getMethod() == "PUT") {
+							
+						}
+						else {
 						if(ses1.getAttribute("role").equals("Admin") || ses1.getAttribute("role").equals("Employee")) {
 							List<Account> accounts = ac.findAll();
 							res.setStatus(200);
@@ -162,18 +192,21 @@ public class MasterServlet extends HttpServlet {
 								res.getWriter().println("No Accounts Available");
 							}
 						}
+						
 						else {
 							res.setStatus(401);
 							res.getWriter().println("Incorrect credentials");
 						}
+					}
 					}
 				}
 				else {
 					res.setStatus(401);
 					res.getWriter().println("Not logged in");
 				}
-
+				break;
 			}
+			
 		}
 
 		catch (NumberFormatException e) {

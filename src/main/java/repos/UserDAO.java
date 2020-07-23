@@ -54,6 +54,8 @@ public class UserDAO implements UserDAOInterface{
 					Account acct = new Account();
 					acct.setId(resultAcct.getInt("account_id"));
 					acct.setBalance(resultAcct.getDouble("balance"));
+					acct.setStatus(resultAcct.getString("account_status"));
+					acct.setType(resultAcct.getString("account_type"));
 					user.addAccount(acct);
 				}
 
@@ -92,7 +94,7 @@ public class UserDAO implements UserDAOInterface{
 				user.setLastName(result.getString("last_name"));
 				user.setEmail(result.getString("email"));
 				String sqlRole = "SELECT * FROM user_role WHERE user_id_fk = " + id + ";";
-				
+				System.out.println(sqlRole);
 				ResultSet resultRole = statementRole.executeQuery(sqlRole);
 				
 				if(resultRole.next()) {
@@ -108,6 +110,8 @@ public class UserDAO implements UserDAOInterface{
 					Account acct = new Account();
 					acct.setId(resultAcct.getInt("account_id"));
 					acct.setBalance(resultAcct.getDouble("balance"));
+					acct.setStatus(resultAcct.getString("account_status"));
+					acct.setType(resultAcct.getString("account_type"));
 					user.addAccount(acct);
 				}
 				

@@ -1,5 +1,6 @@
 package models;
 
+
 import java.util.ArrayList;
 
 import models.*;
@@ -88,6 +89,10 @@ public class User {
 	
 	public void addAccount(Account acct) {
 		this.accounts.add(acct);
+	}
+	
+	public ArrayList<Account> getAccounts(){
+		return this.accounts;
 	}
 
 	@Override

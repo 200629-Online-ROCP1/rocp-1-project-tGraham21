@@ -1,6 +1,7 @@
 package repos;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -100,14 +101,32 @@ public class AccountDAO implements AccountDAOInterface{
 	}
 
 	@Override
-	public Account submitAccount(Account acct) {
-		// TODO Auto-generated method stub
+	public Account submitAccount(Account acct, int id) {
+		try(Connection conn = ConnectionUtil.getConnection()){
+			
+			int index = 0;
+			String sql = "INSERT INTO account(balance, user_id_fk, account_type, account_status)"
+					+" VALUES(?,?,?,?);";
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setDouble(++index, acct.getBalance());
+			statement.setInt(++index, id);
+			statement.setString(++index, acct.getType());
+			statement.setString(++index, acct.getStatus());
+			
+			statement.execute();
+			
+			Account acct1 = new Account(id, acct.getBalance(), acct.getStatus(), acct.getType());
+			return acct1;
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
 	@Override
 	public Account updateAccount(Account acct) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
