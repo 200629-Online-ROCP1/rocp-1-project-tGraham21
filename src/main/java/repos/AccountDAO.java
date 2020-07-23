@@ -17,20 +17,37 @@ import util.ConnectionUtil;
 public class AccountDAO implements AccountDAOInterface{
 
 	@Override
-	public double withdraw(double amount) {
-		// TODO Auto-generated method stub
-		return 0;
+	public double withdraw(double amount, int id ) {
+		Account acct = findAccountById(id);
+		if(acct.getBalance() - amount >= 0) {
+			acct.setBalance(acct.getBalance() - amount);
+			updateAccount(acct);
+			
+			return acct.getBalance();
+		}
+		return -1;
 	}
 
 	@Override
-	public double deposit(double amount) {
-		// TODO Auto-generated method stub
-		return 0;
+	public double deposit(double amount, int id ) {
+		Account acct = findAccountById(id);
+		if(acct.getBalance() + amount >= 0) {
+			acct.setBalance(acct.getBalance() + amount);
+			updateAccount(acct);
+			
+			return acct.getBalance();
+		}
+		return -1;
 	}
 
 	@Override
-	public boolean transfer(double amount, Account acct) {
-		// TODO Auto-generated method stub
+	public boolean transfer(double amount, int sourceId, int targetId) {
+
+		if(withdraw(amount, sourceId) != -1) {
+			deposit(amount, targetId);
+			return true;
+		}
+		
 		return false;
 	}
 
@@ -86,18 +103,6 @@ public class AccountDAO implements AccountDAOInterface{
 		}
 			
 			return null;
-	}
-
-	@Override
-	public Account findByStatus(AccountStatus status) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Account findByUser(User user) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

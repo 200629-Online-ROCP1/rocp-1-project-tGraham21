@@ -25,4 +25,16 @@ public class AccountService {
 	public Account updateAccount(Account acct) {
 		return dao.updateAccount(acct);
 	}
+	
+	public double withdraw(double amount, int id) {
+		return dao.withdraw(amount, id);
+	}
+	
+	public double deposit(double amount, int id) {
+		return dao.deposit(amount, id);
+	}
+	
+	public boolean transfer(double amount, int idSource, int idTarget) {
+		return dao.transfer(amount, idSource, idTarget);
+	}
 }

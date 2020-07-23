@@ -41,6 +41,7 @@ public class MasterServlet extends HttpServlet {
 				HttpSession ses = req.getSession(false);
 				if (ses != null && ((Boolean) ses.getAttribute("loggedIn"))) {
 					if (portions.length == 3) {
+
 						int id = Integer.parseInt(portions[2]);
 						if (req.getMethod().equals("PUT")) {
 
@@ -132,29 +133,77 @@ public class MasterServlet extends HttpServlet {
 				boolean ownsAccount;
 				if (ses1 != null && ((Boolean) ses1.getAttribute("loggedIn"))) {
 					if (portions.length == 3) {
-						int id = Integer.parseInt(portions[2]);
+						if (portions[2] instanceof String) {
+							String item = portions[2];
+							if (item.equals("withdraw")) {
+								String out = ac.withdraw(req, res, ses1);
+								if (out.equals("error")) {
+									res.getWriter().println("Insufficient Funds");
+									res.setStatus(400);
+									
+								} else if(out.equals("Permissions Error")){
+									res.getWriter().println("Incorrect Credentials");
+									res.setStatus(400);
+								}
+								else {
+									res.getWriter().println(out);
+									res.setStatus(200);
+								}
+							} else if (item.equals("deposit")) {
+								String out = ac.deposit(req, res, ses1);
+								if (out.equals("error")) {
+									res.getWriter().println("Deposit Error");
+									res.setStatus(400);
+									
+								} else if(out.equals("Permissions Error")){
+									res.getWriter().println("Incorrect Credentials");
+									res.setStatus(400);
+								}
+								else {
+									res.getWriter().println(out);
+									res.setStatus(200);
+								}
 
-						User user = uc.findById((int) ses1.getAttribute("userId"));
-						ownsAccount = false;
-						for (Account a : user.getAccounts()) {
-							if (a.getId() == id) {
-								ownsAccount = true;
-							}
-						}
-						if (ses1.getAttribute("role").equals("Admin") || ses1.getAttribute("role").equals("Employee")
-								|| ownsAccount) {
-							Account account = ac.findById(id);
-
-							if (account != null) {
-								res.setStatus(200);
-								res.getWriter().println(om.writeValueAsString(account));
-							} else {
-								res.setStatus(200);
-								res.getWriter().println("Account doesn't exist");
+							} else if (item.equals("transfer")) {
+								String out = ac.transfer(req, res, ses1);
+								if (out.equals("error")) {
+									res.getWriter().println("Transfer Error");
+									res.setStatus(400);
+									
+								} else if(out.equals("Permissions Error")){
+									res.getWriter().println("Incorrect Credentials");
+									res.setStatus(400);
+								}
+								else {
+									res.getWriter().println(out);
+									res.setStatus(200);
+								}
 							}
 						} else {
-							res.setStatus(401);
-							res.getWriter().println("Incorrect credentials");
+							int id = Integer.parseInt(portions[2]);
+
+							User user = uc.findById((int) ses1.getAttribute("userId"));
+							ownsAccount = false;
+							for (Account a : user.getAccounts()) {
+								if (a.getId() == id) {
+									ownsAccount = true;
+								}
+							}
+							if (ses1.getAttribute("role").equals("Admin")
+									|| ses1.getAttribute("role").equals("Employee") || ownsAccount) {
+								Account account = ac.findById(id);
+
+								if (account != null) {
+									res.setStatus(200);
+									res.getWriter().println(om.writeValueAsString(account));
+								} else {
+									res.setStatus(200);
+									res.getWriter().println("Account doesn't exist");
+								}
+							} else {
+								res.setStatus(401);
+								res.getWriter().println("Incorrect credentials");
+							}
 						}
 					} else if (portions.length == 4) {
 						String item = portions[2];
