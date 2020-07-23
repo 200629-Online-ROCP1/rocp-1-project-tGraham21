@@ -43,7 +43,7 @@ public class MasterServlet extends HttpServlet {
 					if (portions.length == 3) {
 						int id = Integer.parseInt(portions[2]);
 						if (req.getMethod().equals("PUT")) {
-							
+
 							if (ses.getAttribute("userId").equals(id) || ses.getAttribute("role").equals("Admin")) {
 
 								BufferedReader reader = req.getReader();
@@ -133,41 +133,80 @@ public class MasterServlet extends HttpServlet {
 				if (ses1 != null && ((Boolean) ses1.getAttribute("loggedIn"))) {
 					if (portions.length == 3) {
 						int id = Integer.parseInt(portions[2]);
-						
-						User user = uc.findById((int)ses1.getAttribute("userId"));
+
+						User user = uc.findById((int) ses1.getAttribute("userId"));
 						ownsAccount = false;
-						for(Account a : user.getAccounts()) {
-							if(a.getId() == id) {
+						for (Account a : user.getAccounts()) {
+							if (a.getId() == id) {
 								ownsAccount = true;
 							}
 						}
-						if(ses1.getAttribute("role").equals("Admin") || ses1.getAttribute("role").equals("Employee") ||
-								ownsAccount) {
+						if (ses1.getAttribute("role").equals("Admin") || ses1.getAttribute("role").equals("Employee")
+								|| ownsAccount) {
 							Account account = ac.findById(id);
-							
-							if(account != null) {
+
+							if (account != null) {
 								res.setStatus(200);
 								res.getWriter().println(om.writeValueAsString(account));
-							}
-							else {
+							} else {
 								res.setStatus(200);
 								res.getWriter().println("Account doesn't exist");
 							}
-						}
-						else {
+						} else {
 							res.setStatus(401);
 							res.getWriter().println("Incorrect credentials");
 						}
-					}
-					else if(portions.length == 4) {
-						
-					}
-					else {
+					} else if (portions.length == 4) {
+						String item = portions[2];
 
-						if(req.getMethod().equals("POST")) {
-							
+						if (item.equals("owner")) {
+							int id = Integer.parseInt(portions[3]);
+							User user = uc.findById((int) ses1.getAttribute("userId"));
+							ownsAccount = false;
+							for (Account a : user.getAccounts()) {
+								if (a.getId() == id) {
+									ownsAccount = true;
+								}
+							}
+
+							if (ses1.getAttribute("role").equals("Admin")
+									|| ses1.getAttribute("role").equals("Employee") || ownsAccount) {
+								List<Account> matches = ac.findByUserId(id);
+								if (matches.size() > 0) {
+									res.setStatus(200);
+									res.getWriter().println(om.writeValueAsString(matches));
+								} else {
+									res.setStatus(200);
+									res.getWriter().println("User has no accounts");
+								}
+							} else {
+								res.setStatus(401);
+								res.getWriter().println("Incorrect credentials");
+							}
+						} else if (item.equals("status")) {
+							String status = portions[3];
+							if (ses1.getAttribute("role").equals("Admin")
+									|| ses1.getAttribute("role").equals("Employee")) {
+								List<Account> matches = ac.findByStatus(status);
+								if (matches.size() > 0) {
+									res.setStatus(200);
+									res.getWriter().println(om.writeValueAsString(matches));
+								} else {
+									res.setStatus(200);
+									res.getWriter().println("No accounts of status " + status);
+								}
+							} else {
+								res.setStatus(401);
+								res.getWriter().println("Incorrect credentials");
+							}
+
+						}
+					} else {
+
+						if (req.getMethod().equals("POST")) {
+
 							// only submit account for yourself
-							Account acct = ac.submitAccount(req, res,(int) ses1.getAttribute("userId"));
+							Account acct = ac.submitAccount(req, res, (int) ses1.getAttribute("userId"));
 							if (acct != null) {
 								res.getWriter().println(om.writeValueAsString(acct));
 								res.setStatus(201);
@@ -175,38 +214,47 @@ public class MasterServlet extends HttpServlet {
 								res.getWriter().println("Invalid Fields");
 								res.setStatus(400);
 							}
-							
-						}
-						else if(req.getMethod() == "PUT") {
-							
-						}
-						else {
-						if(ses1.getAttribute("role").equals("Admin") || ses1.getAttribute("role").equals("Employee")) {
-							List<Account> accounts = ac.findAll();
-							res.setStatus(200);
-							if(accounts.size() > 0) {
-								res.getWriter().println(om.writeValueAsString(accounts));
+
+						} else if (req.getMethod().equals("PUT")) {
+							if (ses1.getAttribute("role").equals("Admin")) {
+								Account acct = ac.updateAccount(req, res);
+								if (acct != null) {
+									res.getWriter().println(om.writeValueAsString(acct));
+									res.setStatus(200);
+								} else {
+									res.getWriter().println("Invalid Fields");
+									res.setStatus(400);
+								}
+							} else {
+								res.getWriter().println("Incorrect credentials");
+								res.setStatus(400);
 							}
-							else
-							{
-								res.getWriter().println("No Accounts Available");
+
+						} else {
+							if (ses1.getAttribute("role").equals("Admin")
+									|| ses1.getAttribute("role").equals("Employee")) {
+								List<Account> accounts = ac.findAll();
+								res.setStatus(200);
+								if (accounts.size() > 0) {
+									res.getWriter().println(om.writeValueAsString(accounts));
+								} else {
+									res.getWriter().println("No Accounts Available");
+								}
 							}
-						}
-						
-						else {
-							res.setStatus(401);
-							res.getWriter().println("Incorrect credentials");
+
+							else {
+								res.setStatus(401);
+								res.getWriter().println("Incorrect credentials");
+							}
 						}
 					}
-					}
-				}
-				else {
+				} else {
 					res.setStatus(401);
 					res.getWriter().println("Not logged in");
 				}
 				break;
 			}
-			
+
 		}
 
 		catch (NumberFormatException e) {

@@ -144,7 +144,7 @@ public class UserDAO implements UserDAOInterface{
 					" WHERE user_id_fk = " + id + "; ";
 			Statement statementRole = conn.createStatement();
 			statementRole.execute(sqlRole);
-			System.out.println(sqlRole);
+	
 			
 			return user;
 		}

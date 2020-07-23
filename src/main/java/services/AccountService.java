@@ -21,4 +21,8 @@ public class AccountService {
 	public Account submitAccount(Account acct, int id) {
 		return dao.submitAccount(acct, id);
 	}
+	
+	public Account updateAccount(Account acct) {
+		return dao.updateAccount(acct);
+	}
 }

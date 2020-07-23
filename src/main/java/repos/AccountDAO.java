@@ -126,6 +126,21 @@ public class AccountDAO implements AccountDAOInterface{
 
 	@Override
 	public Account updateAccount(Account acct) {
+		try(Connection conn = ConnectionUtil.getConnection()){
+			String sql = "UPDATE account SET "
+					+ "balance = " + acct.getBalance() + ", "
+					+ "account_type = '" + acct.getType() + "', "
+					+ "account_status = '" + acct.getStatus()+ "' "
+					+ "WHERE account_id =" + acct.getId()+";";
+			
+			Statement statement = conn.createStatement();
+			statement.execute(sql);
+			
+			return acct;
+		}
+		catch(SQLException e ) {
+			e.printStackTrace();
+		}
 		
 		return null;
 	}
